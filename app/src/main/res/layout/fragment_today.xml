@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="260dp"
         android:background="?attr/colorPrimary"
-        android:elevation="@dimen/materialize_baseline_grid_small">
+        android:elevation="@dimen/materialize_baseline_grid">
 
         <com.hookedonplay.decoviewlib.DecoView
             android:id="@+id/dynamicArcView"

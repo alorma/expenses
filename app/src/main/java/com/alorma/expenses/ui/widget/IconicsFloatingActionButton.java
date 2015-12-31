@@ -28,10 +28,12 @@ public class IconicsFloatingActionButton extends FloatingActionButton {
     }
 
     private void init() {
-        setImageDrawable(new IconicsDrawable(getContext())
-                .icon(MaterialDesignIconic.Icon.gmi_plus)
-                .color(Color.WHITE)
-                .paddingDp(2));
+        if (!isInEditMode()) {
+            setImageDrawable(new IconicsDrawable(getContext())
+                    .icon(MaterialDesignIconic.Icon.gmi_plus)
+                    .color(Color.WHITE)
+                    .paddingDp(2));
+        }
     }
 
 }

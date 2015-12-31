@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import com.alorma.expenses.R;
@@ -38,6 +39,8 @@ public class TodayFragment extends Fragment implements TodayExpensesCallback {
     DecoView decoView;
     @Bind(R.id.textPercentage)
     TextView textPercentage;
+    @Bind(R.id.textPercentageDay)
+    TextView textPercentageDay;
     @Bind(R.id.recycler)
     RecyclerView recyclerView;
 
@@ -111,32 +114,33 @@ public class TodayFragment extends Fragment implements TodayExpensesCallback {
     }
 
     private void setGraphData(float current, float max) {
+        textPercentageDay.setText(String.format(TodayExpensesPresenter.FORMAT, max));
+        textPercentage.setText(String.format(TodayExpensesPresenter.FORMAT, current));
+
         //Create data series track
         SeriesItem seriesItem = new SeriesItem.Builder(ContextCompat.getColor(getActivity(), R.color.accent))
                 .setRange(0, max, 0)
                 .setLineWidth(48f)
                 .setInitialVisibility(false)
-                .setInterpolator(new AccelerateInterpolator())
+                .setInterpolator(new DecelerateInterpolator())
                 .build();
 
-        seriesItem.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
-            @Override
-            public void onSeriesItemAnimationProgress(float percentComplete, float currentPosition) {
-                textPercentage.setText(String.format(TodayExpensesPresenter.FORMAT, currentPosition));
-            }
+        int seriesIndex = decoView.addSeries(seriesItem);
 
-            @Override
-            public void onSeriesItemDisplayProgress(float v) {
+        DecoEvent.Builder decoEvent = new DecoEvent.Builder(current)
+                .setIndex(seriesIndex)
+                .setDuration(700);
 
-            }
-        });
+        if (current >= max) {
+            decoEvent.setColor(ContextCompat.getColor(getActivity(), R.color.md_red_300));
+            decoEvent.setDuration(1500);
+        } else if ((current / max) > 0.7f) {
+            decoEvent.setColor(ContextCompat.getColor(getActivity(), R.color.md_yellow_300));
+            decoEvent.setDuration(1000);
+        }
 
-        int i = decoView.addSeries(seriesItem);
+        decoView.addEvent(decoEvent.build());
 
-        decoView.addEvent(new DecoEvent.Builder(current)
-                .setIndex(i)
-                .setDuration(500)
-                .build());
     }
 
     private void setAdapter(List<Expense> expenses) {

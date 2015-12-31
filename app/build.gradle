@@ -30,4 +30,8 @@ dependencies {
     compile('com.mikepenz:materialize:0.5.1@aar') {
         transitive = true
     }
+    compile 'com.github.bmarrdev:android-DecoView-charting:v0.9.5'
+    compile 'io.reactivex:rxjava:1.1.0'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'com.google.code.gson:gson:2.5'
 }

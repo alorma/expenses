@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Expenses</string>
+    <string name="action_settings">Settings</string>
+    <string name="today_ranking_title">TODAY</string>
+    <string name="calendar_expenses_title">CALENDAR</string>
+</resources>

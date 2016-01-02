@@ -1,9 +1,13 @@
 package com.alorma.expenses.ui.fragment;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
@@ -12,7 +16,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
@@ -37,12 +40,20 @@ public class TodayFragment extends Fragment implements TodayExpensesCallback {
 
     @Bind(R.id.dynamicArcView)
     DecoView decoView;
-    @Bind(R.id.textPercentage)
-    TextView textPercentage;
-    @Bind(R.id.textPercentageDay)
-    TextView textPercentageDay;
+    @Bind(R.id.textDayBudgetTitle)
+    TextView textDayBudgetTitle;
+    @Bind(R.id.textRemainTitle)
+    TextView textRemainTitle;
+    @Bind(R.id.textDayBudget)
+    TextView textDayBudget;
+    @Bind(R.id.textRemain)
+    TextView textRemain;
     @Bind(R.id.recycler)
     RecyclerView recyclerView;
+    @Bind(R.id.header)
+    View header;
+    @Bind(R.id.fab)
+    FloatingActionButton fab;
 
     private TodayExpensesPresenter todayExpensesPresenter;
     private TodayExpensesAdapter adapter;
@@ -114,9 +125,15 @@ public class TodayFragment extends Fragment implements TodayExpensesCallback {
     }
 
     private void setGraphData(float current, float max) {
-        textPercentageDay.setText(String.format(TodayExpensesPresenter.FORMAT, max));
-        textPercentage.setText(String.format(TodayExpensesPresenter.FORMAT, current));
+        textDayBudget.setText(String.format(TodayExpensesPresenter.FORMAT, max));
+        textRemain.setText(String.format(TodayExpensesPresenter.FORMAT, max - current));
+        changeColorsGraph(current, max);
 
+        changeColorsHeader(current, max);
+
+    }
+
+    private void changeColorsGraph(float current, float max) {
         //Create data series track
         SeriesItem seriesItem = new SeriesItem.Builder(ContextCompat.getColor(getActivity(), R.color.accent))
                 .setRange(0, max, 0)
@@ -135,12 +152,64 @@ public class TodayFragment extends Fragment implements TodayExpensesCallback {
             decoEvent.setColor(ContextCompat.getColor(getActivity(), R.color.md_red_300));
             decoEvent.setDuration(1500);
         } else if ((current / max) > 0.7f) {
-            decoEvent.setColor(ContextCompat.getColor(getActivity(), R.color.md_yellow_300));
+            decoEvent.setColor(ContextCompat.getColor(getActivity(), R.color.md_yellow_800));
             decoEvent.setDuration(1000);
         }
 
         decoView.addEvent(decoEvent.build());
+    }
 
+    private void changeColorsHeader(float current, float max) {
+
+        int colorFromBackground = R.color.md_teal_600;
+        int colorFromTexts = R.color.md_teal_A400;
+
+        int colorToBackground = colorFromBackground;
+        int colorToTexts = colorFromTexts;
+
+        if (current >= max) {
+            colorToBackground = R.color.md_red_600;
+            colorToTexts = R.color.md_grey_300;
+        } else if ((current / max) > 0.7f) {
+            colorToBackground = R.color.md_yellow_600;
+            colorToTexts = R.color.md_yellow_900;
+        }
+        colorFromBackground = ContextCompat.getColor(getContext(), colorFromBackground);
+        colorToBackground = ContextCompat.getColor(getContext(), colorToBackground);
+        ValueAnimator colorAnimationBackground = ValueAnimator.ofObject(new ArgbEvaluator(), colorFromBackground, colorToBackground);
+        colorAnimationBackground.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int color = (int) animation.getAnimatedValue();
+                header.setBackgroundColor(color);
+
+                int[][] states = new int[][] {{android.R.attr.state_checked}, {}};
+                int[] colors = new int[]{color, color};
+                ColorStateList stateList = new ColorStateList(states, colors);
+
+                fab.setBackgroundTintList(stateList);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getActivity().getWindow().setStatusBarColor(color);
+                }
+            }
+        });
+        colorAnimationBackground.setDuration(1000);
+        colorAnimationBackground.start();
+
+        colorFromTexts = ContextCompat.getColor(getContext(), colorFromTexts);
+        colorToTexts = ContextCompat.getColor(getContext(), colorToTexts);
+        ValueAnimator colorAnimationTexts = ValueAnimator.ofObject(new ArgbEvaluator(), colorFromTexts, colorToTexts);
+        colorAnimationTexts.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int color = (int) animation.getAnimatedValue();
+                textDayBudgetTitle.setTextColor(color);
+                textRemainTitle.setTextColor(color);
+            }
+        });
+        colorAnimationTexts.setDuration(1000);
+        colorAnimationTexts.start();
     }
 
     private void setAdapter(List<Expense> expenses) {

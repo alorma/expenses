@@ -1,75 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.alorma.expenses.ui.activity.MainActivity">
 
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:background="?attr/colorPrimary"
-        android:elevation="@dimen/materialize_baseline_grid"
-        android:orientation="horizontal">
-
-        <com.hookedonplay.decoviewlib.DecoView
-            android:id="@+id/dynamicArcView"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_margin="@dimen/materialize_baseline_grid"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/materialize_baseline_grid"
-            android:padding="@dimen/materialize_baseline_grid"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.alorma.expenses.ui.activity.MainActivity">
 
         <LinearLayout
+            android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginLeft="@dimen/materialize_baseline_grid"
-            android:layout_marginRight="@dimen/materialize_baseline_grid"
-            android:layout_marginTop="?attr/actionBarSize">
+            android:layout_height="260dp"
+            android:background="?attr/colorPrimary"
+            android:elevation="@dimen/materialize_baseline_grid"
+            android:orientation="horizontal">
 
-            <TextView
-                style="@style/TextAppearance.AppCompat.Headline"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/md_white_1000"
-                android:text="@string/daily_budget" />
+            <com.hookedonplay.decoviewlib.DecoView
+                android:id="@+id/dynamicArcView"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/materialize_baseline_grid"
+                android:padding="@dimen/materialize_baseline_grid" />
 
-            <TextView
-                android:id="@+id/textPercentageDay"
-                style="@style/TextAppearance.AppCompat.Headline"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/materialize_baseline_grid"
-                android:textColor="@color/md_white_1000"
-                android:textStyle="bold"
-                tools:text="75.00€" />
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/materialize_baseline_grid"
+                android:layout_marginRight="@dimen/materialize_baseline_grid"
+                android:layout_marginTop="?attr/actionBarSize"
+                android:orientation="vertical">
 
-            <TextView
-                style="@style/TextAppearance.AppCompat.Headline"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/md_white_1000"
-                android:layout_marginTop="@dimen/materialize_baseline_grid_x4"
-                android:text="@string/current_spending" />
+                <TextView
+                    android:id="@+id/textDayBudgetTitle"
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/daily_budget"
+                    android:textColor="@color/md_teal_A400" />
 
-            <TextView
-                android:id="@+id/textPercentage"
-                style="@style/TextAppearance.AppCompat.Headline"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/materialize_baseline_grid"
-                android:textColor="@color/md_white_1000"
-                android:textStyle="bold"
-                tools:text="34.68€" />
+                <TextView
+                    android:id="@+id/textDayBudget"
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/materialize_baseline_grid"
+                    android:textColor="@color/md_white_1000"
+                    tools:text="75.00€" />
+
+                <TextView
+                    android:id="@+id/textRemainTitle"
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/materialize_baseline_grid_x4"
+                    android:text="@string/remaining"
+                    android:textColor="@color/md_teal_A400" />
+
+                <TextView
+                    android:id="@+id/textRemain"
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/materialize_baseline_grid"
+                    android:textColor="@color/md_white_1000"
+                    tools:text="34.68€" />
+            </LinearLayout>
         </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
+    <com.alorma.expenses.ui.widget.IconicsFloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-</LinearLayout>
+</FrameLayout>
